@@ -2,14 +2,24 @@ name: 'The name of your action here'
 description: 'Provide a description here'
 author: 'Your name or organization here'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  export:
+    required: false
+    description: 'export to xml'
+    default: 'false'
+  import:
+    required: false
+    description: 'import from xml'
+    default: 'false'
+  from:
     required: true
-    default: '1000'
+    description: 'from path'
+    default: ''
+  to:
+    required: true
+    description: 'to path'
+    default: ''
 
-# Define your outputs here.
 outputs:
   time:
     description: 'Your output description here'
