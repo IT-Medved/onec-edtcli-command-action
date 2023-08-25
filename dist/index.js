@@ -4004,7 +4004,7 @@ async function run() {
         }
         if (exportParam) {
             (0, exec_1.exec)('1cedtcli.sh', [
-                '--data',
+                '-data',
                 '/tmp/ws',
                 '-command',
                 'export',
@@ -4016,8 +4016,10 @@ async function run() {
         }
         if (importParam) {
             (0, exec_1.exec)('1cedtcli', [
+                '-data',
+                '/tmp/ws',
                 'export',
-                '--project',
+                '--import',
                 'D:project-1',
                 '--configuration-files',
                 'D:XML-1'

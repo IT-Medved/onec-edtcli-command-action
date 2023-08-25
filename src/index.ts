@@ -20,7 +20,7 @@ export async function run(): Promise<void> {
 
     if (exportParam) {
       exec('1cedtcli.sh', [
-        '--data',
+        '-data',
         '/tmp/ws',
         '-command',
         'export',
@@ -33,8 +33,10 @@ export async function run(): Promise<void> {
 
     if (importParam) {
       exec('1cedtcli', [
+        '-data',
+        '/tmp/ws',
         'export',
-        '--project',
+        '--import',
         'D:project-1',
         '--configuration-files',
         'D:XML-1'
