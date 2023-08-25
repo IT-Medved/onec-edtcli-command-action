@@ -4018,11 +4018,12 @@ async function run() {
             (0, exec_1.exec)('1cedtcli', [
                 '-data',
                 '/tmp/ws',
-                'export',
-                '--import',
-                'D:project-1',
+                '-command',
+                'import',
                 '--configuration-files',
-                'D:XML-1'
+                path_1.default.resolve(from),
+                '--project',
+                path_1.default.resolve(to)
             ]);
         }
         // Set outputs for other workflow steps to use

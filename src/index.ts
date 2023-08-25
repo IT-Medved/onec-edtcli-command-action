@@ -35,11 +35,12 @@ export async function run(): Promise<void> {
       exec('1cedtcli', [
         '-data',
         '/tmp/ws',
-        'export',
-        '--import',
-        'D:project-1',
+        '-command',
+        'import',
         '--configuration-files',
-        'D:XML-1'
+        path.resolve(from),
+        '--project',
+        path.resolve(to)
       ])
     }
 
