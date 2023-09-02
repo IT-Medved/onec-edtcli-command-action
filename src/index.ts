@@ -16,21 +16,23 @@ export async function run(): Promise<void> {
   try {
     const isWindows = process.platform === PLATFORM_WIN
 
-    const exportParam = core.getBooleanInput('export')
-    const importParam = core.getBooleanInput('import')
+    const isExport = core.getBooleanInput('export')
+    const isImport = core.getBooleanInput('import')
     const from = core.getInput('from')
     const to = core.getInput('to')
     const timeout = parseFloat(core.getInput('timeout') || '1') * 60
     const workspace = path.join(process.env.RUNNER_TEMP || os.tmpdir(), 'ws')
     const commandLine = isWindows ? '1cedtcli.bat' : '1cedtcli.sh'
 
-    if (exportParam && importParam) {
+    if (isExport && isImport) {
       throw new Error('export and import options cannot be used together')
-    } else if (!exportParam && !importParam) {
+    } else if (!isExport && !isImport) {
       throw new Error('set export or import option')
     }
 
-    const command = exportParam ? 'export' : importParam ? 'import' : ''
+    const command = isExport ? 'export' : 'import'
+    const configurationFiles = isExport ? path.resolve(to) : path.resolve(from)
+    const projectFiles = isExport ? path.resolve(from) : path.resolve(to)
 
     exec(commandLine, [
       '-data',
@@ -40,9 +42,9 @@ export async function run(): Promise<void> {
       '-command',
       command,
       '--configuration-files',
-      path.resolve(from),
+      configurationFiles,
       '--project',
-      path.resolve(to)
+      projectFiles
     ])
 
     // Set outputs for other workflow steps to use

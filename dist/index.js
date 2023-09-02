@@ -4000,20 +4000,22 @@ const PLATFORM_MAC = 'darwin';
 async function run() {
     try {
         const isWindows = process.platform === PLATFORM_WIN;
-        const exportParam = core.getBooleanInput('export');
-        const importParam = core.getBooleanInput('import');
+        const isExport = core.getBooleanInput('export');
+        const isImport = core.getBooleanInput('import');
         const from = core.getInput('from');
         const to = core.getInput('to');
         const timeout = parseFloat(core.getInput('timeout') || '1') * 60;
         const workspace = path_1.default.join(process.env.RUNNER_TEMP || os.tmpdir(), 'ws');
         const commandLine = isWindows ? '1cedtcli.bat' : '1cedtcli.sh';
-        if (exportParam && importParam) {
+        if (isExport && isImport) {
             throw new Error('export and import options cannot be used together');
         }
-        else if (!exportParam && !importParam) {
+        else if (!isExport && !isImport) {
             throw new Error('set export or import option');
         }
-        const command = exportParam ? 'export' : importParam ? 'import' : '';
+        const command = isExport ? 'export' : 'import';
+        const configurationFiles = isExport ? path_1.default.resolve(to) : path_1.default.resolve(from);
+        const projectFiles = isExport ? path_1.default.resolve(from) : path_1.default.resolve(to);
         (0, exec_1.exec)(commandLine, [
             '-data',
             workspace,
@@ -4022,9 +4024,9 @@ async function run() {
             '-command',
             command,
             '--configuration-files',
-            path_1.default.resolve(from),
+            configurationFiles,
             '--project',
-            path_1.default.resolve(to)
+            projectFiles
         ]);
         // Set outputs for other workflow steps to use
         //core.setOutput('time', new Date().toTimeString())
