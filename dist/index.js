@@ -4004,7 +4004,7 @@ async function run() {
         const importParam = core.getBooleanInput('import');
         const from = core.getInput('from');
         const to = core.getInput('to');
-        const timeout = core.getInput('timeout');
+        const timeout = parseFloat(core.getInput('timeout') || '1') * 60;
         const workspace = path_1.default.join(process.env.RUNNER_TEMP || os.tmpdir(), 'ws');
         const commandLine = isWindows ? '1cedtcli.bat' : '1cedtcli.sh';
         if (exportParam && importParam) {
@@ -4018,7 +4018,7 @@ async function run() {
             '-data',
             workspace,
             '-timeout',
-            timeout,
+            timeout.toString(),
             '-command',
             command,
             '--configuration-files',

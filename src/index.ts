@@ -20,7 +20,7 @@ export async function run(): Promise<void> {
     const importParam = core.getBooleanInput('import')
     const from = core.getInput('from')
     const to = core.getInput('to')
-    const timeout = core.getInput('timeout')
+    const timeout = parseFloat(core.getInput('timeout') || '1') * 60
     const workspace = path.join(process.env.RUNNER_TEMP || os.tmpdir(), 'ws')
     const commandLine = isWindows ? '1cedtcli.bat' : '1cedtcli.sh'
 
@@ -36,7 +36,7 @@ export async function run(): Promise<void> {
       '-data',
       workspace,
       '-timeout',
-      timeout,
+      timeout.toString(),
       '-command',
       command,
       '--configuration-files',

@@ -22,7 +22,7 @@ inputs:
   timeout:
     required: true
     description: 'command timeout'
-    default: '60'
+    default: '1'
 
 outputs:
   time:
