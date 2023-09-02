@@ -19,6 +19,10 @@ inputs:
     required: true
     description: 'to path'
     default: ''
+  timeout:
+    required: true
+    description: 'command timeout'
+    default: '1'
 
 outputs:
   time:

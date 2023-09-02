@@ -3989,43 +3989,45 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(186));
 const exec_1 = __nccwpck_require__(514);
 const path_1 = __importDefault(__nccwpck_require__(17));
+const os = __importStar(__nccwpck_require__(37));
+const PLATFORM_WIN = 'win32';
+const PLATFORM_LIN = 'linux';
+const PLATFORM_MAC = 'darwin';
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 async function run() {
     try {
-        const exportParam = core.getBooleanInput('export');
-        const importParam = core.getBooleanInput('import');
+        const isWindows = process.platform === PLATFORM_WIN;
+        const isExport = core.getBooleanInput('export');
+        const isImport = core.getBooleanInput('import');
         const from = core.getInput('from');
         const to = core.getInput('to');
-        if (exportParam && importParam) {
+        const timeout = parseFloat(core.getInput('timeout') || '1') * 60;
+        const workspace = path_1.default.join(process.env.RUNNER_TEMP || os.tmpdir(), 'ws');
+        const commandLine = isWindows ? '1cedtcli.bat' : '1cedtcli.sh';
+        if (isExport && isImport) {
             throw new Error('export and import options cannot be used together');
         }
-        if (exportParam) {
-            (0, exec_1.exec)('1cedtcli.sh', [
-                '-data',
-                '/tmp/ws',
-                '-command',
-                'export',
-                '--project',
-                path_1.default.resolve(from),
-                '--configuration-files',
-                path_1.default.resolve(to)
-            ]);
+        else if (!isExport && !isImport) {
+            throw new Error('set export or import option');
         }
-        if (importParam) {
-            (0, exec_1.exec)('1cedtcli', [
-                '-data',
-                '/tmp/ws',
-                '-command',
-                'import',
-                '--configuration-files',
-                path_1.default.resolve(from),
-                '--project',
-                path_1.default.resolve(to)
-            ]);
-        }
+        const command = isExport ? 'export' : 'import';
+        const configurationFiles = isExport ? path_1.default.resolve(to) : path_1.default.resolve(from);
+        const projectFiles = isExport ? path_1.default.resolve(from) : path_1.default.resolve(to);
+        (0, exec_1.exec)(commandLine, [
+            '-data',
+            workspace,
+            '-timeout',
+            timeout.toString(),
+            '-command',
+            command,
+            '--configuration-files',
+            configurationFiles,
+            '--project',
+            projectFiles
+        ]);
         // Set outputs for other workflow steps to use
         //core.setOutput('time', new Date().toTimeString())
     }
